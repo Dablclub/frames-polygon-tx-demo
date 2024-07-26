@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "frog": "latest",
+    "frog": "0.15.5",
     "hono": "^4",
     "next": "14.1.0",
     "react": "^18",
