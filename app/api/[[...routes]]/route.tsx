@@ -48,7 +48,7 @@ app.transaction('/send-matic', (c) => {
   const inputText = c.inputText || '';
   return c.send({
     chainId: 'eip155:137',
-    to: '0xF54f4815f62ccC360963329789d62d3497A121Ae',
+    to: recipientAddress,
     value: parseEther(inputText),
   });
 });
@@ -58,7 +58,7 @@ app.transaction('/send-xoc', (c) => {
   return c.contract({
     abi: erc20Abi,
     functionName: 'transfer',
-    args: ['0xF54f4815f62ccC360963329789d62d3497A121Ae', parseEther(inputText)],
+    args: [recipientAddress, parseEther(inputText)],
     chainId: 'eip155:137',
     to: xocTokenAddress,
   });
