@@ -11,12 +11,15 @@ import { Box, Heading, Text, VStack, vars } from '../../ui';
 const xocTokenAddress =
   '0xa411c9Aa00E020e4f88Bc19996d29c5B7ADB4ACf' as `0x${string}`;
 
+const recipientAddress =
+  '0x669dC3691F67aFF64f9ef31C9643E04A2EeDB7a9' as `0x${string}`;
+
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
   // Supply a Hub to enable frame verification.
   // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
-  title: 'Frog Frame',
+  title: 'MATIC and XOC tips - Polygon PoS',
   ui: { vars },
 });
 
@@ -29,12 +32,12 @@ app.frame('/', (c) => {
       <Box grow alignVertical="center" backgroundColor="purple500" padding="32">
         <VStack gap="4">
           <Heading size="48">Polygon Frame Tx</Heading>
-          <Text size="32">send a tip to mel 😎</Text>
+          <Text size="32">Send a tip to Dabl Club 😎</Text>
         </VStack>
       </Box>
     ),
     intents: [
-      <TextInput placeholder="Value" />,
+      <TextInput placeholder="enter the value to tip" />,
       <Button.Transaction target="/send-matic">Send MATIC</Button.Transaction>,
       <Button.Transaction target="/send-xoc">Send XOC</Button.Transaction>,
     ],

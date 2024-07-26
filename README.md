@@ -1,6 +1,12 @@
+# Frames Polygon PoS Transaction Demo
+
+clone the repository and move to the directory
+
+install dependencies
+
 ```
-npm install
-npm run dev
+bun install
+bun run dev
 ```
 
-Head to http://localhost:3000/api
+head to http://localhost:3000/api/dev
