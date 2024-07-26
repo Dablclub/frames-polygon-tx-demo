@@ -33,6 +33,11 @@ app.frame('/', (c) => {
         <VStack gap="4">
           <Heading size="48">Polygon Frame Tx</Heading>
           <Text size="32">Send a tip to Dabl Club 😎</Text>
+          <Text size="18">
+            Enter a value on the input field. Default (empty input):
+          </Text>
+          <Text size="18">1 MATIC</Text>
+          <Text size="18">5 XOC</Text>
         </VStack>
       </Box>
     ),
