@@ -45,7 +45,7 @@ app.frame('/', (c) => {
 });
 
 app.transaction('/send-matic', (c) => {
-  const inputText = c.inputText || '';
+  const inputText = c.inputText || '1';
   return c.send({
     chainId: 'eip155:137',
     to: recipientAddress,
@@ -54,7 +54,7 @@ app.transaction('/send-matic', (c) => {
 });
 
 app.transaction('/send-xoc', (c) => {
-  const inputText = c.inputText || '';
+  const inputText = c.inputText || '5';
   return c.contract({
     abi: erc20Abi,
     functionName: 'transfer',
