@@ -1,55 +1,87 @@
 /** @jsxImportSource frog/jsx */
 
-import { Button, Frog, parseEther, TextInput } from 'frog';
+import { Button, Frog, parseEther } from 'frog';
 import { devtools } from 'frog/dev';
 // import { neynar } from 'frog/hubs'
 import { handle } from 'frog/next';
 import { serveStatic } from 'frog/serve-static';
-import { erc20Abi } from 'viem';
 import { Box, Heading, Text, VStack, vars } from '../../ui';
 
-const xocTokenAddress =
-  '0xa411c9Aa00E020e4f88Bc19996d29c5B7ADB4ACf' as `0x${string}`;
-
 const recipientAddress =
-  '0x669dC3691F67aFF64f9ef31C9643E04A2EeDB7a9' as `0x${string}`;
+  '0x9e9Be4c2Fd64788cde3d6fb324C8Ea52822A2C2B' as `0x${string}`;
 
 const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
-  // Supply a Hub to enable frame verification.
-  // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
-  title: 'MATIC and XOC tips - Polygon PoS',
+  title: 'Send MATIC and Love - Polygon PoS',
   ui: { vars },
 });
 
-// Uncomment to use Edge Runtime
-// export const runtime = 'edge'
-
 app.frame('/', (c) => {
   return c.res({
+    action: '/select',
     image: (
       <Box grow alignVertical="center" backgroundColor="purple500" padding="32">
         <VStack gap="4">
-          <Heading size="48">Polygon Frame Tx</Heading>
-          <Text size="32">Send a tip to Dabl Club 😎</Text>
-          <Text size="18">
-            Enter a value on the input field. Default (empty input):
-          </Text>
-          <Text size="18">1 MATIC</Text>
-          <Text size="18">5 XOC</Text>
+          <Heading size="48">Choose an Action</Heading>
+          <Text size="32">Do you want to send Matic or Love?</Text>
         </VStack>
       </Box>
     ),
     intents: [
-      <TextInput placeholder="enter the value to tip" />,
-      <Button.Transaction target="/send-matic">Send MATIC</Button.Transaction>,
-      <Button.Transaction target="/send-xoc">Send XOC</Button.Transaction>,
+      <Button value="matic">Send Matic</Button>,
+      <Button value="love">Send Love ❤️</Button>,
     ],
   });
 });
 
-app.transaction('/send-matic', (c) => {
+app.frame('/select', (c) => {
+  const { buttonValue } = c;
+
+  if (buttonValue === 'matic') {
+    return c.res({
+      action: '/confirm-matic',
+      image: (
+        <Box grow alignVertical="center" backgroundColor="blue500" padding="32">
+          <VStack gap="4">
+            <Heading size="48">Confirm Matic Transaction</Heading>
+            <Text size="32">Press the button to send Matic</Text>
+          </VStack>
+        </Box>
+      ),
+      intents: [
+        <Button.Transaction target="/send-pos-mainnet">Confirm Send Matic</Button.Transaction>,
+      ],
+    });
+  } else if (buttonValue === 'love') {
+    return c.res({
+      action: '/',
+      image: (
+        <Box grow alignVertical="center" backgroundColor="pink500" padding="32">
+          <VStack gap="4">
+            <Heading size="48">Love Sent ❤️</Heading>
+            <Text size="32">Thank you for spreading the love!</Text>
+          </VStack>
+        </Box>
+      ),
+      intents: [<Button value="back">Back to Home</Button>],
+    });
+  }
+
+  return c.res({
+    image: (
+      <Box grow alignVertical="center" backgroundColor="red500" padding="32">
+        <VStack gap="4">
+          <Heading size="48">Error</Heading>
+          <Text size="32">Invalid action selected.</Text>
+        </VStack>
+      </Box>
+    ),
+    intents: [<Button value="back">Back to Home</Button>],
+  });
+});
+
+app.transaction('/send-pos-mainnet', (c) => {
   const inputText = c.inputText || '1';
   return c.send({
     chainId: 'eip155:137',
@@ -58,32 +90,23 @@ app.transaction('/send-matic', (c) => {
   });
 });
 
-app.transaction('/send-xoc', (c) => {
-  const inputText = c.inputText || '5';
-  return c.contract({
-    abi: erc20Abi,
-    functionName: 'transfer',
-    args: [recipientAddress, parseEther(inputText)],
-    chainId: 'eip155:137',
-    to: xocTokenAddress,
+app.frame('/send-pos-mainnet', (c) => {
+  return c.res({
+    action: '/',
+    image: (
+      <Box grow alignVertical="center" backgroundColor="green500" padding="32">
+        <VStack gap="4">
+          <Heading size="48">Matic Sent!</Heading>
+          <Text size="32">You successfully sent MATIC.</Text>
+        </VStack>
+      </Box>
+    ),
+    intents: [<Button value="back">Back to Home</Button>],
   });
 });
+
 
 devtools(app, { serveStatic });
 
 export const GET = handle(app);
 export const POST = handle(app);
-
-// NOTE: That if you are using the devtools and enable Edge Runtime, you will need to copy the devtools
-// static assets to the public folder. You can do this by adding a script to your package.json:
-// ```json
-// {
-//   scripts: {
-//     "copy-static": "cp -r ./node_modules/frog/_lib/ui/.frog ./public/.frog"
-//   }
-// }
-// ```
-// Next, you'll want to set up the devtools to use the correct assets path:
-// ```ts
-// devtools(app, { assetsPath: '/.frog' })
-// ```
